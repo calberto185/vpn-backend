@@ -1,0 +1,66 @@
+const CountryEntity = require("./countryEntity");
+class ServicesDto {
+  id = "";
+  sortName = "";
+  longName = "";
+  Description = "";
+  picture = "";
+  country = new CountryEntity();
+  city = [];
+  details = [];
+  amount = 0;
+  coinSymbol = "";
+  plan = new PlanClientDto();
+  plans = [];
+  state = false;
+  visible = false;
+  createdAt = new Date();
+  updateAt = new Date();
+
+  
+  constructor() {}
+  set({ 
+    id,
+    sortName,
+    longName,
+    Description,
+    picture,
+    country,
+    city,
+    details,
+    amount,
+    coinSymbol,
+    plan,
+    plans,
+    state,
+    visible,
+    createdAt,
+    updateAt,
+  }) {
+    this.id = id ?? this.id;
+    this.sortName = sortName ?? this.sortName;
+    this.longName = longName ?? this.longName;
+    this.Description = Description ?? this.Description;
+    this.picture = picture ?? this.picture;
+    this.country = country ?? this.country;
+    this.city = city ?? this.city;
+    this.details = details ?? this.details;
+    this.amount = amount ?? this.amount;
+    this.coinSymbol = coinSymbol ?? this.coinSymbol;
+    this.plan = plan ?? this.plan;
+    this.plans = plans ?? this.plans;
+    this.state = state ?? this.state;
+    this.visible = visible ?? this.visible;
+    this.createdAt = createdAt ?? this.createdAt;
+    this.updateAt = updateAt ?? this.updateAt;
+  }
+  get() {
+    if(!this.id) throw new Error('The id field is required!.');
+    if(!this.sortName) throw new Error('The sortName field is required!.');
+    if(!this.longName) throw new Error('The longName field is required!.');
+    if(!this.country) throw new Error('The country field is required!.');
+    return this;
+  }
+}
+
+module.exports = ServicesDto;
