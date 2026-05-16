@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cliente WebSocket con Reconexión</title>
+</head>
+<body>
+  <h2>Cliente WebSocket</h2>
+  <p id="estado">🔄 Conectando...</p>
+  <button onclick="enviarMensaje()">📤 Enviar mensaje</button>
+  <p id="respuesta">⏳ Esperando respuesta...</p>
+
+  <script>
+    const authKey = "ADB";
+    let socket;
+    let reconexionIntentos = 0;
+    const maxIntentos = 10;
+
+    function conectarWS() {
+      socket = new WebSocket(`ws://${location.host}?authKey=${authKey}`);
+
+      socket.addEventListener("open", () => {
+        reconexionIntentos = 0;
+        document.getElementById("estado").textContent = "✅ Conectado al servidor WebSocket";
+      });
+
+      socket.addEventListener("message", (event) => {
+        document.getElementById("respuesta").textContent = "📩 Mensaje del servidor: " + event.data;
+      });
+
+      socket.addEventListener("close", () => {
+        document.getElementById("estado").textContent = "🔌 Conexión cerrada. Reintentando...";
+        reintentarConexion();
+      });
+
+      socket.addEventListener("error", (error) => {
+        document.getElementById("estado").textContent = "❌ Error en la conexión WebSocket";
+        console.error("WebSocket error:", error);
+        socket.close(); // Forzamos cierre para que active la reconexión
+      });
+    }
+
+    function reintentarConexion() {
+      if (reconexionIntentos < maxIntentos) {
+        reconexionIntentos++;
+        setTimeout(() => {
+          console.log(`🔁 Reintentando conexión (${reconexionIntentos})...`);
+          conectarWS();
+        }, 1000 * reconexionIntentos); // tiempo creciente
+      } else {
+        document.getElementById("estado").textContent = "❗ No se pudo reconectar al servidor.";
+      }
+    }
+
+    function enviarMensaje() {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send("Hola servidor, soy el cliente");
+      } else {
+        alert("⚠️ No estás conectado. Esperando reconexión...");
+      }
+    }
+
+    conectarWS(); // Inicia conexión
+  </script>
+</body>
+</html>

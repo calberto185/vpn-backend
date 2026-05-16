@@ -1,0 +1,15 @@
+services:
+  backend:
+    build:
+      context: .
+    container_name: openvpn-backend
+    volumes:
+      - ./storage:/storage
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    restart: unless-stopped
+
+volumes:
+  files-data:
