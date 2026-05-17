@@ -20,10 +20,25 @@ jobs:
           script: |
             set -e
 
-            cd /opt/vpn-backend
+            REPO_DIR="/opt/vpn-backend"
+            REPO_URL="https://github.com/calberto185/vpn-backend.git"
 
-            echo "▶ Pulling latest code..."
-            git pull origin master
+            # Primera vez: clonar; siguientes: pull
+            if [ ! -d "$REPO_DIR/.git" ]; then
+              echo "▶ Primera vez: clonando repo..."
+              git clone -b master "$REPO_URL" "$REPO_DIR"
+            else
+              echo "▶ Actualizando código..."
+              git -C "$REPO_DIR" pull origin master
+            fi
+
+            cd "$REPO_DIR"
+
+            # Crear .env si no existe (copia del example)
+            if [ ! -f ".env" ]; then
+              echo "⚠ No hay .env — copiando .env.example (edítalo después)"
+              cp .env.example .env
+            fi
 
             echo "▶ Rebuilding containers..."
             docker compose up -d --build --remove-orphans
