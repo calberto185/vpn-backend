@@ -20,7 +20,7 @@ jobs:
           script: |
             set -e
 
-            REPO_DIR="/opt/vpn-backend"
+            REPO_DIR="/root/backend"
             REPO_URL="https://github.com/calberto185/vpn-backend.git"
 
             # Primera vez: clonar; siguientes: pull
